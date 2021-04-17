@@ -52,5 +52,6 @@ export default {
 
   'menu.workplace': '工作台',
   'menu.classes': '班级列表',
-  'menu.classes.table-list': '查询列表'
+  'menu.classes.classes-list': '查询班级',
+  'menu.classes.add-form': '班级添加',
 };

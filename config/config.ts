@@ -121,11 +121,17 @@ export default defineConfig({
                   redirect: '/classes/table-list',
                 },
                 {
-                  name: 'table-list',
+                  name: 'classes-list',
                   icon: 'smile',
                   path: '/classes/table-list',
-                  component: './list/table-list',
+                  component: './classes/classes-list',
                 },
+                {
+                  name: 'add-form',
+                  icon: 'smile',
+                  path: '/classes/step-form',
+                  component: './classes/add-form'
+                }
               ],
             },
             {
