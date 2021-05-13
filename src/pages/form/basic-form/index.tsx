@@ -18,7 +18,9 @@ interface BasicFormProps {
 }
 
 const BasicForm: FC<BasicFormProps> = (props) => {
-  const { submitting } = props;
+  // @ts-ignore
+  const { submitting, location } = props;
+  console.error('ccY: ', location.state)
   const [form] = Form.useForm();
   const [showPublicUsers, setShowPublicUsers] = React.useState(false);
   const formItemLayout = {

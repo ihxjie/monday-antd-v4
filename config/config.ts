@@ -131,7 +131,8 @@ export default defineConfig({
                   icon: 'smile',
                   path: '/classes/step-form',
                   component: './classes/add-form'
-                }
+                },
+                
               ],
             },
             {

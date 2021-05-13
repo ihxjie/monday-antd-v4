@@ -51,7 +51,7 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
 
   'menu.workplace': '工作台',
-  'menu.classes': '班级列表',
+  'menu.classes': '班级',
   'menu.classes.classes-list': '查询班级',
   'menu.classes.add-form': '班级添加',
 };

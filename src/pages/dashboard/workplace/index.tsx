@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import type { Dispatch} from 'umi';
 import { Link, connect } from 'umi';
+// import { Link as ReactLink } from 'react-router';
 import { PageContainer } from '@ant-design/pro-layout';
 import moment from 'moment';
 import Radar from './components/Radar';
@@ -18,7 +19,7 @@ interface WorkplaceProps {
   radarData: RadarDataType[];
   dispatch: Dispatch;
   currentUserLoading: boolean;
-  projectLoading: boolean;
+  classesLoading: boolean;
   activitiesLoading: boolean;
 }
 
@@ -49,11 +50,9 @@ const PageHeaderContent: React.FC<{ currentUser: CurrentUser }> = ({ currentUser
 const ExtraContent: React.FC<{}> = () => (
   <div className={styles.extraContent}>
     <div className={styles.statItem}>
-      <Statistic title="项目数" value={56} />
+      <Statistic title="班级数" value={56} />
     </div>
-    <div className={styles.statItem}>
-      <Statistic title="团队内排名" value={8} suffix="/ 24" />
-    </div>
+
     <div className={styles.statItem}>
       <Statistic title="项目访问" value={2223} />
     </div>
@@ -112,7 +111,7 @@ class Workplace extends Component<WorkplaceProps> {
       currentUser,
       activities,
       classes,
-      projectLoading,
+      classesLoading,
       activitiesLoading,
       radarData,
     } = this.props;
@@ -130,10 +129,9 @@ class Workplace extends Component<WorkplaceProps> {
             <Card
               className={styles.projectList}
               style={{ marginBottom: 24 }}
-              title="进行中的班级"
+              title="全部班级"
               bordered={false}
-              extra={<Link to="/">全部班级</Link>}
-              loading={projectLoading}
+              loading={classesLoading}
               bodyStyle={{ padding: 0 }}
             >
               {classes.map((item) => (
@@ -143,7 +141,7 @@ class Workplace extends Component<WorkplaceProps> {
                       title={
                         <div className={styles.cardTitle}>
                           <Avatar size="small" src={item.logo} />
-                          <Link to={item.href}>{item.title}</Link>
+                          <Link to={{ pathname : '/profile/basic', search: '?clazzId='+item.id }}>{item.title}</Link>
                         </div>
                       }
                       description={item.description}
@@ -212,7 +210,6 @@ export default connect(
     radarData,
     currentUserLoading: loading.effects['dashboardAndworkplace/fetchUserCurrent'],
     classesLoading: loading.effects['dashboardAndworkplace/fetchClasses'],
-    projectLoading: loading.effects['dashboardAndworkplace/fetchProjectNotice'],
     activitiesLoading: loading.effects['dashboardAndworkplace/fetchActivitiesList'],
   }),
 )(Workplace);

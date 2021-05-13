@@ -109,21 +109,21 @@ const description = (
 const desc1 = (
   <div className={classNames(styles.textSecondary, styles.stepDescription)}>
     <Fragment>
-      曲丽丽
+      杨婷洁
       <DingdingOutlined style={{ marginLeft: 8 }} />
     </Fragment>
-    <div>2016-12-12 12:32</div>
+    <div>2021-04-30 10:30</div>
   </div>
 );
 
 const desc2 = (
   <div className={styles.stepDescription}>
     <Fragment>
-      周毛毛
+      杨婷洁
       <DingdingOutlined style={{ color: '#00A0E9', marginLeft: 8 }} />
     </Fragment>
     <div>
-      <a href="">催一下</a>
+      <a href="">结束</a>
     </div>
   </div>
 );
@@ -288,7 +288,7 @@ class Advanced extends Component<
       >
         <div className={styles.main}>
           <GridContent>
-            <Card title="流程进度" style={{ marginBottom: 24 }}>
+            <Card title="签到进度" style={{ marginBottom: 24 }}>
               <RouteContext.Consumer>
                 {({ isMobile }) => (
                   <Steps
@@ -296,10 +296,10 @@ class Advanced extends Component<
                     progressDot={customDot}
                     current={1}
                   >
-                    <Step title="创建项目" description={desc1} />
-                    <Step title="部门初审" description={desc2} />
-                    <Step title="财务复核" />
-                    <Step title="完成" />
+                    <Step title="创建签到" description={desc1} />
+                    <Step title="学生签到" description={desc2} />
+                    <Step title="接收补签请求" />
+                    <Step title="结束" />
                   </Steps>
                 )}
               </RouteContext.Consumer>

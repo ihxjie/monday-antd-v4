@@ -44,7 +44,6 @@ const Step2: React.FC<Step2Props> = (props) => {
   };
   const onValidateForm = async () => {
     const values = await validateFields();
-    console.log(...values)
     if (dispatch) {
       dispatch({
         type: 'classAndStepForm/submitStepForm',

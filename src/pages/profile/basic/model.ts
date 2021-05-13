@@ -1,17 +1,22 @@
+import { string } from 'prop-types';
 import type { Effect, Reducer } from 'umi';
 
-import type { BasicGood } from './data.d';
-import { queryBasicProfile } from './service';
+import type { Attendance, Student, ClazzInfo } from './data.d';
+import { queryAttendanceByClazzId, queryClazzInfo, queryStudentByClazzId } from './service';
 
 export interface StateType {
-  basicGoods: BasicGood[];
+  attendances: Attendance[];
+  students: Student[];
+  clazzInfo: Partial<ClazzInfo>;
 }
 
 export interface ModelType {
   namespace: string;
   state: StateType;
   effects: {
-    fetchBasic: Effect;
+    fetchAttendance: Effect;
+    fetchStudent: Effect;
+    fetchClazzInfo: Effect;
   };
   reducers: {
     show: Reducer<StateType>;
@@ -19,18 +24,42 @@ export interface ModelType {
 }
 
 const Model: ModelType = {
-  namespace: 'profileAndbasic',
+  namespace: 'clazz',
 
   state: {
-    basicGoods: [],
+    attendances: [],
+    students: [],
+    clazzInfo: {},
   },
 
   effects: {
-    *fetchBasic(_, { call, put }) {
-      const response = yield call(queryBasicProfile);
+    
+    *fetchAttendance({ payload }, { call, put }) {
+      const response = yield call(queryAttendanceByClazzId, payload);
       yield put({
         type: 'show',
-        payload: response,
+        payload: {
+          attendances: Array.isArray(response) ? response : [],
+        },
+      });
+    },
+    *fetchStudent({ payload }, { call, put }) {
+      const response = yield call(queryStudentByClazzId, payload);
+      yield put({
+        type: 'show',
+        payload: {
+          students: Array.isArray(response) ? response : [],
+        },
+      });
+    },
+    *fetchClazzInfo({ payload }, { call, put }) {
+      const response = yield call(queryClazzInfo, payload);
+      yield put({
+        type: 'show',
+        payload: {
+          clazzInfo: response,
+        }
+        
       });
     },
   },

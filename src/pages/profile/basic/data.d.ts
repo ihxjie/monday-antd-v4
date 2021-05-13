@@ -1,22 +1,32 @@
-export interface BasicGood {
-  id: string;
-  name?: string;
-  barcode?: string;
-  price?: string;
-  num?: string | number;
-  amount?: string | number;
+
+export interface Attendance {
+  attendanceId: string;
+  clazzId: string;
+  startTime: string;
+  endTime: string;
+  attendanceType?: string;
+  attLongitude: string;
+  attLatitude: string;
+  attAccuracy: string;
 }
 
-export interface BasicProgress {
-  key: string;
-  time: string;
-  rate: string;
-  status: string;
-  operator: string;
-  cost: string;
+export interface Student {
+  userId: string;
+  userAvatar: string;
+  realName: string;
+  userTel: string;
+  userEmail: string;
 }
 
-export interface BasicProfileDataType {
-  basicGoods: BasicGood[];
-  basicProgress: BasicProgress[];
+export interface ClazzInfo {
+  clazzName: string;
+  clazzDescription: string;
+  clazzTeacher: string;
+  isFinish: string;
+}
+
+export interface ClazzDataType {
+  attendances: Attendance[];
+  students: Student[];
+  clazzInfo: ClazzInfo;
 }

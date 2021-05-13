@@ -1,51 +1,74 @@
-import { Badge, Card, Descriptions, Divider, Table } from 'antd';
-import React, { Component } from 'react';
+import { 
+  Badge, 
+  Card, 
+  Descriptions, 
+  Button,
+  Divider, 
+  Table, 
+  Dropdown,
+  Menu,
+  Modal,
+  message,
+} from 'antd';
+import {
+  DownOutlined,
+} from '@ant-design/icons';
+import React, { Component, Fragment, useState, useRef } from 'react';
 
-import { PageContainer } from '@ant-design/pro-layout';
-import type { Dispatch } from 'umi';
+import { PageContainer, RouteContext } from '@ant-design/pro-layout';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Dispatch, Link } from 'umi';
 import { connect } from 'umi';
-import type { BasicProfileDataType } from './data.d';
+import type { ClazzDataType, Student } from './data.d';
+
 import styles from './style.less';
 
-const progressColumns = [
-  {
-    title: '时间',
-    dataIndex: 'time',
-    key: 'time',
-  },
-  {
-    title: '当前进度',
-    dataIndex: 'rate',
-    key: 'rate',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: (text: string) => {
-      if (text === 'success') {
-        return <Badge status="success" text="成功" />;
-      }
-      return <Badge status="processing" text="进行中" />;
-    },
-  },
+const ButtonGroup = Button.Group;
 
-  {
-    title: '操作员ID',
-    dataIndex: 'operator',
-    key: 'operator',
-  },
-  {
-    title: '耗时',
-    dataIndex: 'cost',
-    key: 'cost',
-  },
-];
+const mobileMenu = (
+  <Menu>
+    <Menu.Item key="1">解散班级</Menu.Item>
+  </Menu>
+);
+
+const handleEdit = (item) => {
+  console.log('test: ', item)
+}
+const action = (
+  <RouteContext.Consumer>
+    {({ isMobile }) => {
+      if (isMobile) {
+        return (
+          <Dropdown.Button
+            type="primary"
+            icon={<DownOutlined />}
+            overlay={mobileMenu}
+            placement="bottomRight"
+          >
+            发起签到
+          </Dropdown.Button>
+        );
+      }
+      return (
+        <Fragment>
+          <ButtonGroup>
+            <Button type="primary">发起签到</Button>
+            <Button onClick={handleEdit.bind(this, '123')}>解散班级</Button>
+            
+          </ButtonGroup>
+        </Fragment>
+      );
+    }}
+  </RouteContext.Consumer>
+);
 
 interface BasicProps {
-  loading: boolean;
+  attendanceLoading: boolean;
+  studentLoading: boolean;
   dispatch: Dispatch;
-  profileAndbasic: BasicProfileDataType;
+  location: any;
+  clazz: ClazzDataType;
 }
 interface BasicState {
   visible: boolean;
@@ -54,137 +77,159 @@ interface BasicState {
 class Basic extends Component<BasicProps, BasicState> {
   componentDidMount() {
     const { dispatch } = this.props;
+    const clazzId = this.props.location.query.clazzId
+
     dispatch({
-      type: 'profileAndbasic/fetchBasic',
+      type: 'clazz/fetchClazzInfo',
+      payload: {
+        clazzId: clazzId
+      }
+    });
+
+    dispatch({
+      type: 'clazz/fetchAttendance',
+      payload: {
+        clazzId: clazzId
+      }
+    });
+
+    dispatch({
+      type: 'clazz/fetchStudent',
+      payload: {
+        clazzId: clazzId
+      }
     });
   }
-
   render() {
-    const { profileAndbasic, loading } = this.props;
-    const { basicGoods, basicProgress } = profileAndbasic;
-    let goodsData: typeof basicGoods = [];
-    if (basicGoods.length) {
-      let num = 0;
-      let amount = 0;
-      basicGoods.forEach((item) => {
-        num += Number(item.num);
-        amount += Number(item.amount);
-      });
-      goodsData = basicGoods.concat({
-        id: '总计',
-        num,
-        amount,
-      });
-    }
-    const renderContent = (value: any, row: any, index: any) => {
-      const obj: {
-        children: any;
-        props: { colSpan?: number };
-      } = {
-        children: value,
-        props: {},
-      };
-      if (index === basicGoods.length) {
-        obj.props.colSpan = 0;
-      }
-      return obj;
-    };
-    const goodsColumns = [
+    const { clazz, attendanceLoading, studentLoading } = this.props;
+    const { attendances, students, clazzInfo } = clazz;
+    console.error("students: ", students)
+
+    
+
+    const student: ProColumns<Student>[] = [
       {
-        title: '商品编号',
-        dataIndex: 'id',
-        key: 'id',
-        render: (text: React.ReactNode, row: any, index: number) => {
-          if (index < basicGoods.length) {
-            return <a href="">{text}</a>;
+        title: '编号',
+        dataIndex: 'userId',
+        key: 'userId',
+      },
+      {
+        title: '头像',
+        dataIndex: 'userAvatar',
+        key: 'userAvatar',
+        valueType: 'avatar',
+        
+      },
+      {
+        title: '姓名',
+        dataIndex: 'realName',
+        key: 'realName',
+      },
+      {
+        title: '电话',
+        dataIndex: 'userTel',
+        key: 'userTel',
+      },
+      {
+        title: '邮箱',
+        dataIndex: 'userEmail',
+        key: 'userEmail',
+      },
+    ];
+    const attendance = [
+      {
+        title: '签到编号',
+        dataIndex: 'attendanceId',
+        key: 'attendanceId',
+      },
+      {
+        title: '开始时间',
+        dataIndex: 'startTime',
+        key: 'startTime',
+      },
+      {
+        title: '结束时间',
+        dataIndex: 'endTime',
+        key: 'endTime',
+      },
+      {
+        title: '签到方式',
+        dataIndex: 'attendanceType',
+        key: 'attendanceType',
+        render: (text: string) => {
+          if (text == '1') {
+            return <Badge status="processing" text="点击签到" />;
+          }else if (text == '2') {
+            return <Badge status="processing" text="二维码签到" />;
+          }else if (text == '3') {
+            return <Badge status="processing" text="地理位置签到" />;
+          }else if (text == '4') {
+            return <Badge status="processing" text="人脸识别签到" />;
+          }else if (text == '5') {
+            return <Badge status="processing" text="人脸+地理位置签到" />;
+          }else if (text == '6') {
+            return <Badge status="processing" text="地理位置+二维码签到" />;
           }
-          return {
-            children: <span style={{ fontWeight: 600 }}>总计</span>,
-            props: {
-              colSpan: 4,
-            },
-          };
-        },
-      },
-      {
-        title: '商品名称',
-        dataIndex: 'name',
-        key: 'name',
-        render: renderContent,
-      },
-      {
-        title: '商品条码',
-        dataIndex: 'barcode',
-        key: 'barcode',
-        render: renderContent,
-      },
-      {
-        title: '单价',
-        dataIndex: 'price',
-        key: 'price',
-        align: 'right' as 'left' | 'right' | 'center',
-        render: renderContent,
-      },
-      {
-        title: '数量（件）',
-        dataIndex: 'num',
-        key: 'num',
-        align: 'right' as 'left' | 'right' | 'center',
-        render: (text: React.ReactNode, row: any, index: number) => {
-          if (index < basicGoods.length) {
-            return text;
-          }
-          return <span style={{ fontWeight: 600 }}>{text}</span>;
-        },
-      },
-      {
-        title: '金额',
-        dataIndex: 'amount',
-        key: 'amount',
-        align: 'right' as 'left' | 'right' | 'center',
-        render: (text: React.ReactNode, row: any, index: number) => {
-          if (index < basicGoods.length) {
-            return text;
-          }
-          return <span style={{ fontWeight: 600 }}>{text}</span>;
+          return <Badge status="error" text="未定义" />;
         },
       },
     ];
+
     return (
       <PageContainer>
-        <Card bordered={false}>
-          <Descriptions title="退款申请" style={{ marginBottom: 32 }}>
-            <Descriptions.Item label="取货单号">1000000000</Descriptions.Item>
-            <Descriptions.Item label="状态">已取货</Descriptions.Item>
-            <Descriptions.Item label="销售单号">1234123421</Descriptions.Item>
-            <Descriptions.Item label="子订单">3214321432</Descriptions.Item>
+        <Card 
+          bordered={false}
+          extra={action}
+        >
+          <Descriptions title="班级信息" style={{ marginBottom: 32 }}>
+            <Descriptions.Item label="班级名称">{clazzInfo.clazzName}</Descriptions.Item>
+            <Descriptions.Item label="教师">{clazzInfo.clazzTeacher}</Descriptions.Item>
+            <Descriptions.Item label="班级状态">
+              {clazzInfo.isFinish}
+            </Descriptions.Item>
+            <Descriptions.Item label="班级简介">{clazzInfo.clazzDescription}</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
-          <Descriptions title="用户信息" style={{ marginBottom: 32 }}>
-            <Descriptions.Item label="用户姓名">付小小</Descriptions.Item>
-            <Descriptions.Item label="联系电话">18100000000</Descriptions.Item>
-            <Descriptions.Item label="常用快递">菜鸟仓储</Descriptions.Item>
-            <Descriptions.Item label="取货地址">浙江省杭州市西湖区万塘路18号</Descriptions.Item>
-            <Descriptions.Item label="备注">无</Descriptions.Item>
-          </Descriptions>
-          <Divider style={{ marginBottom: 32 }} />
-          <div className={styles.title}>退货商品</div>
+          
+          <div className={styles.title}>历史签到</div>
+          
           <Table
             style={{ marginBottom: 24 }}
             pagination={false}
-            loading={loading}
-            dataSource={goodsData}
-            columns={goodsColumns}
+            loading={attendanceLoading}
+            dataSource={attendances}
+            columns={attendance}
             rowKey="id"
           />
-          <div className={styles.title}>退货进度</div>
-          <Table
-            style={{ marginBottom: 16 }}
+          <Divider style={{ marginBottom: 32 }} />
+
+          <div className={styles.title}>学生</div>
+          
+          <ProTable<Student>
+            style={{ marginBottom: 24 }}
             pagination={false}
-            loading={loading}
-            dataSource={basicProgress}
-            columns={progressColumns}
+            loading={studentLoading}
+            dataSource={students}
+            columns={student}
+            toolbar={{
+              actions: [
+                <Link to=''>
+                  <Button
+                    key="primary"
+                    type="primary"
+                    onClick={() => {
+                      message.info('This is a normal message');
+                    }}
+                  >
+                    发起签到
+                  </Button>
+                </Link>,
+              ],
+            }}
+            search={false}
+            rowKey="id"
           />
+          
         </Card>
       </PageContainer>
     );
@@ -193,15 +238,16 @@ class Basic extends Component<BasicProps, BasicState> {
 
 export default connect(
   ({
-    profileAndbasic,
+    clazz,
     loading,
   }: {
-    profileAndbasic: BasicProfileDataType;
+    clazz: ClazzDataType;
     loading: {
       effects: Record<string, boolean>;
     };
   }) => ({
-    profileAndbasic,
-    loading: loading.effects['profileAndbasic/fetchBasic'],
+    clazz,
+    studentLoading: loading.effects['clazz/fetchStudent'],
+    attendanceLoading: loading.effects['clazz/fetchAttendance'],
   }),
 )(Basic);
