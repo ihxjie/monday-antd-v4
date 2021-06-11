@@ -211,21 +211,7 @@ class Basic extends Component<BasicProps, BasicState> {
             loading={studentLoading}
             dataSource={students}
             columns={student}
-            toolbar={{
-              actions: [
-                <Link to=''>
-                  <Button
-                    key="primary"
-                    type="primary"
-                    onClick={() => {
-                      message.info('This is a normal message');
-                    }}
-                  >
-                    发起签到
-                  </Button>
-                </Link>,
-              ],
-            }}
+            toolbar={[]}
             search={false}
             rowKey="id"
           />

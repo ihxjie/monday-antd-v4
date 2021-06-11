@@ -24,7 +24,7 @@ export interface ModelType {
 }
 
 const Model: ModelType = {
-  namespace: 'basic',
+  namespace: 'clazz',
 
   state: {
     attendances: [],

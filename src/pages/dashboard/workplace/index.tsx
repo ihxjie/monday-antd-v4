@@ -122,69 +122,42 @@ class Workplace extends Component<WorkplaceProps> {
     return (
       <PageContainer
         content={<PageHeaderContent currentUser={currentUser} />}
-        extraContent={<ExtraContent />}
       >
         <Row gutter={24}>
-          <Col xl={16} lg={24} md={24} sm={24} xs={24}>
+          <Col xl={24} lg={24} md={24} sm={24} xs={24}>
             <Card
               className={styles.projectList}
               style={{ marginBottom: 24 }}
               title="全部班级"
-              bordered={false}
+              extra={<Link to="/classes/step-form">添加班级</Link>}
               loading={classesLoading}
               bodyStyle={{ padding: 0 }}
             >
               {classes.map((item) => (
                 <Card.Grid className={styles.projectGrid} key={item.id}>
-                  <Card bodyStyle={{ padding: 0 }} bordered={false}>
-                    <Card.Meta
-                      title={
-                        <div className={styles.cardTitle}>
-                          <Avatar size="small" src={item.logo} />
-                          <Link to={{ pathname : '/profile/basic', search: '?clazzId='+item.id }}>{item.title}</Link>
-                        </div>
-                      }
-                      description={item.description}
-                    />
-                    <div className={styles.projectItemContent}>
-                      <Link to={'/teacher/' + item.teacher}>{item.teacher || ''}</Link>
-                      {item.updatedAt && (
-                        <span className={styles.datetime} title={item.updatedAt}>
-                          {moment(item.updatedAt).fromNow()}
-                        </span>
-                      )}
-                    </div>
-                  </Card>
+                  <Link to={{ pathname : '/classes/clazz', search: '?clazzId=' + item.id }}>
+                    <Card bodyStyle={{ padding: 0 }} bordered={false}>
+                      <Card.Meta
+                        title={
+                          <div className={styles.cardTitle}>
+                            <Avatar size="small" src={item.logo} />
+                            <Link to='/'>{item.title}</Link>
+                          </div>
+                        }
+                        description={item.description}
+                      />
+                      <div className={styles.projectItemContent}>
+                        <Link to={'/'}>{ item.teacher || '' }</Link>
+                        {item.updatedAt && (
+                          <span className={styles.datetime} title={item.updatedAt}>
+                            {moment(item.updatedAt).fromNow()}
+                          </span>
+                        )}
+                      </div>
+                    </Card>
+                  </Link>
                 </Card.Grid>
               ))}
-            </Card>
-            <Card
-              bodyStyle={{ padding: 0 }}
-              bordered={false}
-              className={styles.activeCard}
-              title="动态"
-              loading={activitiesLoading}
-            >
-              <List<ActivitiesType>
-                loading={activitiesLoading}
-                renderItem={(item) => this.renderActivities(item)}
-                dataSource={activities}
-                className={styles.activitiesList}
-                size="large"
-              />
-            </Card>
-          </Col>
-          <Col xl={8} lg={24} md={24} sm={24} xs={24}>
-            
-            <Card
-              style={{ marginBottom: 24 }}
-              bordered={false}
-              title="XX 指数"
-              loading={radarData.length === 0}
-            >
-              <div className={styles.chart}>
-                <Radar hasLegend height={343} data={radarData} />
-              </div>
             </Card>
           </Col>
         </Row>

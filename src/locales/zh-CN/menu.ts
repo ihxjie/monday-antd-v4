@@ -54,4 +54,11 @@ export default {
   'menu.classes': '班级',
   'menu.classes.classes-list': '查询班级',
   'menu.classes.add-form': '班级添加',
+  'menu.classes.clazz': '班级详情',
+  'menu.classes.attendance': '签到详情',
+  'menu.classes.attendance.step1': '创建签到',
+  'menu.classes.attendance.step2': '学生签到',
+  'menu.classes.attendance.step3': '接收补签请求',
+  'menu.classes.attendance.step4': '签到结束',
+  'menu.classes.qrcode': '签到二维码',
 };

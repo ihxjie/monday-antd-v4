@@ -84,7 +84,7 @@ const Login: React.FC<LoginProps> = (props) => {
             key="mobile"
             tab={intl.formatMessage({
               id: 'pages.login.phoneLogin.tab',
-              defaultMessage: '手机号登录',
+              defaultMessage: '邮箱验证码登录',
             })}
           />
         </Tabs>
@@ -157,28 +157,11 @@ const Login: React.FC<LoginProps> = (props) => {
                 prefix: <MobileOutlined className={styles.prefixIcon} />,
               }}
               name="mobile"
-              placeholder={intl.formatMessage({
-                id: 'pages.login.phoneNumber.placeholder',
-                defaultMessage: '手机号',
-              })}
+              placeholder="邮箱"
               rules={[
                 {
                   required: true,
-                  message: (
-                    <FormattedMessage
-                      id="pages.login.phoneNumber.required"
-                      defaultMessage="请输入手机号！"
-                    />
-                  ),
-                },
-                {
-                  pattern: /^1\d{10}$/,
-                  message: (
-                    <FormattedMessage
-                      id="pages.login.phoneNumber.invalid"
-                      defaultMessage="手机号格式错误！"
-                    />
-                  ),
+                  message: "请输入邮箱！"
                 },
               ]}
             />
@@ -190,10 +173,7 @@ const Login: React.FC<LoginProps> = (props) => {
               captchaProps={{
                 size: 'large',
               }}
-              placeholder={intl.formatMessage({
-                id: 'pages.login.captcha.placeholder',
-                defaultMessage: '请输入验证码',
-              })}
+              placeholder="请输入验证码"
               captchaTextRender={(timing, count) => {
                 if (timing) {
                   return `${count} ${intl.formatMessage({
@@ -245,12 +225,6 @@ const Login: React.FC<LoginProps> = (props) => {
           </a>
         </div>
       </ProForm>
-      <Space className={styles.other}>
-        <FormattedMessage id="pages.login.loginWith" defaultMessage="其他登录方式" />
-        <AlipayCircleOutlined className={styles.icon} />
-        <TaobaoCircleOutlined className={styles.icon} />
-        <WeiboCircleOutlined className={styles.icon} />
-      </Space>
     </div>
   );
 };
